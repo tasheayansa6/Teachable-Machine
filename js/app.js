@@ -42,6 +42,7 @@
   document.getElementById('train-btn').addEventListener('click', _trainModel);
   document.getElementById('reset-btn').addEventListener('click', _reset);
   document.getElementById('demo-btn').addEventListener('click', _loadDemo);
+  document.getElementById('demo-btn-hero').addEventListener('click', _loadDemo);
   document.getElementById('export-btn').addEventListener('click', _exportModel);
   document.getElementById('import-input').addEventListener('change', _importModel);
 

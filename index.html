@@ -3,259 +3,307 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Teachable Machine — Browser AI</title>
-  <meta name="description" content="Train a real image classifier in your browser. No code, no server. Powered by TensorFlow.js."/>
+  <title>Teachable Machine — Browser AI Classifier</title>
+  <meta name="description" content="Train a real image classifier in your browser. No code, no server. Powered by TensorFlow.js + MobileNet V2."/>
+  <meta property="og:title" content="Teachable Machine — Browser AI"/>
+  <meta property="og:description" content="Train your own image classifier in seconds. 100% in-browser."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/styles/style.css"/>
 </head>
 <body>
 
-<!-- ═══════════════════════════════ NAVBAR ═══════════════════════════════ -->
+<!-- ══════════════════════════ NAVBAR ══════════════════════════ -->
 <nav class="navbar" role="navigation" aria-label="Main navigation">
   <div class="nav-inner">
     <div class="nav-brand">
-      <span class="brand-icon">🧠</span>
+      <div class="brand-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="url(#lg1)"/><path d="M8 12l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="lg1" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs></svg>
+      </div>
       <span class="brand-name" data-i18n="brand">Teachable Machine</span>
+      <span class="brand-tag">BETA</span>
     </div>
     <div class="nav-actions">
-      <button id="lang-toggle" class="icon-btn" title="Switch language" aria-label="Switch language">
+      <button id="lang-toggle" class="nav-pill-btn" title="Switch language" aria-label="Switch language">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
         <span id="lang-label">ML</span>
       </button>
-      <button id="theme-toggle" class="icon-btn" title="Toggle dark mode" aria-label="Toggle dark mode">
-        <svg id="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        <svg id="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <button id="theme-toggle" class="nav-icon-btn" title="Toggle dark mode" aria-label="Toggle dark mode">
+        <svg id="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg id="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
-      <button id="demo-btn" class="btn btn-outline-white" data-i18n="loadDemo">⚡ Load Demo</button>
+      <button id="demo-btn" class="btn btn-hero-demo" data-i18n="loadDemo">⚡ Load Demo</button>
     </div>
   </div>
 </nav>
 
-<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+<!-- ══════════════════════════ HERO ══════════════════════════ -->
 <header class="hero">
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
   <div class="hero-inner">
-    <div class="hero-badge" data-i18n="heroBadge">100% In-Browser · No Server · No Code</div>
-    <h1 class="hero-title" data-i18n="heroTitle">Train Your Own AI Model</h1>
+    <div class="hero-eyebrow">
+      <span class="hero-dot"></span>
+      <span data-i18n="heroBadge">100% In-Browser · No Server · No Code</span>
+    </div>
+    <h1 class="hero-title">
+      <span data-i18n="heroTitle">Train Your Own</span><br/>
+      <span class="hero-title-gradient">AI Model</span>
+    </h1>
     <p class="hero-sub" data-i18n="heroSub">Upload images, train a real neural network, and classify new images — all inside your browser using TensorFlow.js.</p>
+    <div class="hero-cta-row">
+      <button class="btn btn-hero-primary" onclick="document.getElementById('section-classes').scrollIntoView({behavior:'smooth'})">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span data-i18n="getStarted">Get Started</span>
+      </button>
+      <button id="demo-btn-hero" class="btn btn-hero-secondary" data-i18n="loadDemo">⚡ Load Demo</button>
+    </div>
     <div class="hero-steps">
       <div class="hstep"><div class="hstep-num">1</div><span data-i18n="step1">Add Classes</span></div>
-      <div class="hstep-arrow">→</div>
+      <div class="hstep-line"></div>
       <div class="hstep"><div class="hstep-num">2</div><span data-i18n="step2">Upload Images</span></div>
-      <div class="hstep-arrow">→</div>
+      <div class="hstep-line"></div>
       <div class="hstep"><div class="hstep-num">3</div><span data-i18n="step3">Train Model</span></div>
-      <div class="hstep-arrow">→</div>
+      <div class="hstep-line"></div>
       <div class="hstep"><div class="hstep-num">4</div><span data-i18n="step4">Predict</span></div>
     </div>
   </div>
 </header>
 
-<!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
-<main>
+<!-- ══════════════════════════ LOADING OVERLAY ══════════════════════════ -->
+<div id="loading-overlay" class="loading-overlay" role="status" aria-live="polite">
+  <div class="spinner"></div>
+  <p class="loading-text" data-i18n="loadingModel">Loading MobileNet backbone…</p>
+</div>
 
-  <!-- ── LOADING OVERLAY ── -->
-  <div id="loading-overlay" class="loading-overlay" role="status" aria-live="polite">
-    <div class="loading-card">
-      <div class="spinner"></div>
-      <p id="loading-msg" data-i18n="loadingModel">Loading MobileNet backbone…</p>
-      <p class="loading-sub" data-i18n="loadingSub">This may take a few seconds on first load.</p>
-    </div>
-  </div>
+<!-- ══════════════════════════ MAIN ══════════════════════════ -->
+<main class="main-content">
 
   <!-- ── SECTION 1: CLASSES ── -->
-  <section class="section" id="section-classes">
+  <div class="section" id="section-classes">
     <div class="section-header">
       <div>
         <h2 class="section-title" data-i18n="classesTitle">Image Classes</h2>
-        <p class="section-desc" data-i18n="classesDesc">Create at least 2 classes and upload images for each. More images = better accuracy.</p>
+        <p class="section-subtitle" data-i18n="classesDesc">Create at least 2 classes and upload images for each. More images = better accuracy.</p>
       </div>
-      <button id="add-class-btn" class="btn btn-primary">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        <span data-i18n="addClass">Add Class</span>
-      </button>
+      <div class="section-actions">
+        <button id="add-class-btn" class="btn btn-primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span data-i18n="addClass">Add Class</span>
+        </button>
+      </div>
     </div>
     <div id="classes-container" class="classes-grid"></div>
-    <div id="classes-empty" class="empty-state">
-      <div class="empty-icon">📂</div>
+    <div id="classes-empty" style="text-align:center;padding:48px 24px;color:var(--text-4)">
+      <div style="font-size:2.5rem;margin-bottom:12px">📂</div>
       <p data-i18n="emptyClasses">No classes yet. Click "Add Class" or load the demo.</p>
     </div>
-  </section>
+  </div>
 
   <!-- ── SECTION 2: TRAIN ── -->
-  <section class="section" id="section-train">
+  <div class="section" id="section-train">
     <div class="section-header">
       <div>
         <h2 class="section-title" data-i18n="trainTitle">Train Model</h2>
-        <p class="section-desc" data-i18n="trainDesc">MobileNet extracts features; a dense classifier head is trained on top.</p>
+        <p class="section-subtitle" data-i18n="trainDesc">MobileNet V2 extracts features; a dense classifier head is trained on top.</p>
       </div>
-      <div class="train-actions">
+      <div class="section-actions">
         <button id="train-btn" class="btn btn-success" disabled>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           <span data-i18n="trainBtn">Train Model</span>
         </button>
-        <button id="reset-btn" class="btn btn-ghost" title="Reset everything" data-i18n="resetBtn">Reset</button>
+        <button id="reset-btn" class="btn btn-ghost" data-i18n="resetBtn">Reset</button>
       </div>
     </div>
 
-    <div id="train-status-bar" class="status-bar status-idle">
-      <span id="train-status-icon">⏳</span>
+    <div id="train-status-bar" class="train-status train-status-idle">
+      <span class="status-dot"></span>
       <span id="train-status-text" data-i18n="statusIdle">Add images to all classes to begin.</span>
     </div>
 
-    <div id="train-progress-wrap" class="progress-wrap" style="display:none">
-      <div class="progress-track"><div id="train-progress-bar" class="progress-fill"></div></div>
-      <span id="train-progress-label" class="progress-label">0%</span>
-    </div>
-
-    <!-- Live chart -->
-    <div id="chart-wrap" class="chart-wrap" style="display:none">
-      <div class="chart-legend">
-        <span class="legend-dot loss"></span><span data-i18n="loss">Loss</span>
-        <span class="legend-dot acc" style="margin-left:16px"></span><span data-i18n="accuracy">Accuracy</span>
+    <div id="train-progress-wrap" style="display:none; margin-top:16px">
+      <div class="progress-label">
+        <span id="train-progress-epoch">Epoch 0/40</span>
+        <span id="train-progress-label">0%</span>
       </div>
-      <canvas id="train-chart" height="120" aria-label="Training chart" role="img"></canvas>
+      <div class="progress-wrap">
+        <div id="train-progress-bar" class="progress-bar" style="width:0%"></div>
+      </div>
     </div>
 
-    <!-- Stats row -->
-    <div id="train-stats" class="stats-row" style="display:none">
-      <div class="stat-card"><div class="stat-val" id="stat-epochs">—</div><div class="stat-lbl" data-i18n="statEpochs">Epochs</div></div>
-      <div class="stat-card"><div class="stat-val" id="stat-samples">—</div><div class="stat-lbl" data-i18n="statSamples">Samples</div></div>
-      <div class="stat-card"><div class="stat-val" id="stat-acc">—</div><div class="stat-lbl" data-i18n="statAcc">Final Acc.</div></div>
-      <div class="stat-card"><div class="stat-val" id="stat-loss">—</div><div class="stat-lbl" data-i18n="statLoss">Final Loss</div></div>
+    <div id="chart-wrap" class="chart-wrap" style="display:none; margin-top:20px">
+      <canvas id="train-chart" height="160" aria-label="Training chart" role="img" style="width:100%"></canvas>
     </div>
 
-    <!-- Export / Import -->
-    <div id="model-actions" class="model-actions" style="display:none">
+    <div id="train-stats" class="stats-row" style="display:none; margin-top:20px">
+      <div class="stat-card">
+        <div class="stat-label" data-i18n="statEpochs">Epochs</div>
+        <div class="stat-value" id="stat-epochs">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" data-i18n="statSamples">Samples</div>
+        <div class="stat-value" id="stat-samples">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" data-i18n="statAcc">Final Acc.</div>
+        <div class="stat-value" id="stat-acc">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" data-i18n="statLoss">Final Loss</div>
+        <div class="stat-value" id="stat-loss">—</div>
+      </div>
+    </div>
+
+    <div id="model-actions" class="model-actions-row" style="display:none; margin-top:20px">
       <button id="export-btn" class="btn btn-outline">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span data-i18n="exportModel">Export Model</span>
       </button>
-      <label class="btn btn-outline" id="import-label">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <label class="btn btn-ghost" id="import-label" style="cursor:pointer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         <span data-i18n="importModel">Import Model</span>
         <input type="file" id="import-input" accept=".json" style="display:none"/>
       </label>
     </div>
-  </section>
+  </div>
 
   <!-- ── SECTION 3: PREDICT ── -->
-  <section class="section" id="section-predict" style="display:none">
+  <div class="section" id="section-predict" style="display:none">
     <div class="section-header">
       <div>
         <h2 class="section-title" data-i18n="predictTitle">Make a Prediction</h2>
-        <p class="section-desc" data-i18n="predictDesc">Upload an image or use your webcam to classify it with the trained model.</p>
+        <p class="section-subtitle" data-i18n="predictDesc">Upload an image or use your webcam to classify it with the trained model.</p>
       </div>
-      <div class="predict-source-tabs">
-        <button class="tab-btn active" id="tab-upload" data-i18n="tabUpload">Upload</button>
-        <button class="tab-btn" id="tab-webcam" data-i18n="tabWebcam">Webcam</button>
+      <div class="section-actions">
+        <button class="tab-btn active" id="tab-upload">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span data-i18n="tabUpload">Upload</span>
+        </button>
+        <button class="tab-btn" id="tab-webcam">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+          <span data-i18n="tabWebcam">Webcam</span>
+        </button>
       </div>
     </div>
 
-    <!-- Upload panel -->
     <div id="panel-upload">
       <div id="predict-drop-zone" class="drop-zone" role="button" tabindex="0" aria-label="Upload image for prediction">
-        <div class="drop-zone-inner">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <p data-i18n="dropZoneText">Drag &amp; drop an image here</p>
-          <span class="drop-zone-or" data-i18n="or">or</span>
-          <label class="btn btn-primary" for="predict-file-input" data-i18n="chooseFile">Choose File</label>
-          <input type="file" id="predict-file-input" accept="image/*" style="display:none"/>
-        </div>
+        <div class="drop-zone-icon">🖼️</div>
+        <div class="drop-zone-title" data-i18n="dropZoneText">Drag &amp; drop an image here</div>
+        <div class="drop-zone-hint" style="margin-bottom:16px" data-i18n="or">or</div>
+        <label class="btn btn-primary" for="predict-file-input" data-i18n="chooseFile">Choose File</label>
+        <input type="file" id="predict-file-input" accept="image/*" style="display:none"/>
       </div>
-      <!-- Demo test buttons (shown after demo train) -->
-      <div id="demo-test-btns" style="display:none; margin-top:12px;"></div>
+      <div id="demo-test-btns" class="demo-test-row" style="display:none"></div>
     </div>
 
-    <!-- Webcam panel -->
-    <div id="panel-webcam" style="display:none">
-      <div class="webcam-wrap">
+    <div id="panel-webcam" style="display:none; padding-top:16px">
+      <div class="webcam-wrap" id="webcam-wrap">
         <video id="webcam-video" autoplay playsinline muted aria-label="Webcam feed"></video>
-        <canvas id="webcam-canvas" style="display:none"></canvas>
-        <div class="webcam-controls">
-          <button id="webcam-start-btn" class="btn btn-primary" data-i18n="startCam">Start Camera</button>
-          <button id="webcam-snap-btn" class="btn btn-success" style="display:none" data-i18n="snapPredict">Snap &amp; Predict</button>
-          <button id="webcam-live-btn" class="btn btn-outline" style="display:none" data-i18n="livePrediction">Live Prediction</button>
-          <button id="webcam-stop-btn" class="btn btn-danger" style="display:none" data-i18n="stopCam">Stop Camera</button>
+        <div class="webcam-overlay"></div>
+      </div>
+      <div class="webcam-controls" style="margin-top:16px">
+        <button id="webcam-start-btn" class="btn btn-primary" data-i18n="startCam">Start Camera</button>
+        <button id="webcam-snap-btn" class="btn btn-success" style="display:none" data-i18n="snapPredict">Snap &amp; Predict</button>
+        <button id="webcam-live-btn" class="btn btn-outline" style="display:none" data-i18n="livePrediction">Live Prediction</button>
+        <button id="webcam-stop-btn" class="btn btn-danger" style="display:none" data-i18n="stopCam">Stop Camera</button>
+      </div>
+    </div>
+
+    <div id="predict-results-wrap" class="results-wrap" style="display:none; margin-top:24px">
+      <img id="predict-preview-img" alt="Prediction input" class="result-preview"/>
+      <div class="result-bars" id="results-container"></div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 4: HOW IT WORKS ── -->
+  <div class="about-section">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:40px">
+        <h2 class="section-title" data-i18n="aboutTitle">How It Works</h2>
+        <p class="section-subtitle" style="margin-top:8px;max-width:560px;margin-left:auto;margin-right:auto" data-i18n="trainDesc">MobileNet V2 extracts features; a dense classifier head is trained on top.</p>
+      </div>
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="about-card-icon">🔍</div>
+          <div class="about-card-title" data-i18n="about1Title">Feature Extraction</div>
+          <p class="about-card-desc" data-i18n="about1Desc">MobileNet V2 (pre-trained on ImageNet) converts every image into a 1280-dimensional feature vector — capturing shapes, textures, and patterns.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">🏋️</div>
+          <div class="about-card-title" data-i18n="about2Title">Transfer Learning</div>
+          <p class="about-card-desc" data-i18n="about2Desc">A small dense classifier head is trained on top of those features using your images. Training takes seconds, not hours.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">⚡</div>
+          <div class="about-card-title" data-i18n="about3Title">100% In-Browser</div>
+          <p class="about-card-desc" data-i18n="about3Desc">TensorFlow.js runs the entire pipeline — feature extraction, training, and inference — directly in your browser. Your images never leave your device.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">📦</div>
+          <div class="about-card-title" data-i18n="about4Title">Export &amp; Reuse</div>
+          <p class="about-card-desc" data-i18n="about4Desc">Export your trained model as a JSON file and import it later — no need to retrain. Share it with others or embed it in your own projects.</p>
         </div>
       </div>
-    </div>
-
-    <!-- Results -->
-    <div id="predict-results-wrap" class="results-wrap" style="display:none">
-      <div class="result-preview-col">
-        <img id="predict-preview-img" alt="Prediction input" class="result-preview-img"/>
-        <div id="result-top-badge" class="result-top-badge"></div>
-      </div>
-      <div class="result-bars-col" id="results-container"></div>
-    </div>
-  </section>
-
-  <!-- ── SECTION 4: ABOUT / TECH ── -->
-  <section class="section section-about">
-    <h2 class="section-title" data-i18n="aboutTitle">How It Works</h2>
-    <div class="about-grid">
-      <div class="about-card">
-        <div class="about-icon">🔍</div>
-        <h3 data-i18n="about1Title">Feature Extraction</h3>
-        <p data-i18n="about1Desc">MobileNet V2 (pre-trained on ImageNet) converts every image into a 1280-dimensional feature vector — capturing shapes, textures, and patterns.</p>
-      </div>
-      <div class="about-card">
-        <div class="about-icon">🏋️</div>
-        <h3 data-i18n="about2Title">Transfer Learning</h3>
-        <p data-i18n="about2Desc">A small dense classifier head is trained on top of those features using your images. Training takes seconds, not hours.</p>
-      </div>
-      <div class="about-card">
-        <div class="about-icon">⚡</div>
-        <h3 data-i18n="about3Title">100% In-Browser</h3>
-        <p data-i18n="about3Desc">TensorFlow.js runs the entire pipeline — feature extraction, training, and inference — directly in your browser. Your images never leave your device.</p>
-      </div>
-      <div class="about-card">
-        <div class="about-icon">📦</div>
-        <h3 data-i18n="about4Title">Export &amp; Reuse</h3>
-        <p data-i18n="about4Desc">Export your trained model as a JSON file and import it later — no need to retrain. Share it with others or embed it in your own projects.</p>
+      <div class="tech-badges" style="margin-top:32px">
+        <span class="tech-badge">TensorFlow.js 4.x</span>
+        <span class="tech-badge">MobileNet V2</span>
+        <span class="tech-badge">Transfer Learning</span>
+        <span class="tech-badge">WebGL Accelerated</span>
+        <span class="tech-badge">Vanilla JS ES6+</span>
+        <span class="tech-badge">Canvas API</span>
       </div>
     </div>
-    <div class="tech-stack">
-      <span class="tech-badge">TensorFlow.js 4.x</span>
-      <span class="tech-badge">MobileNet V2</span>
-      <span class="tech-badge">Transfer Learning</span>
-      <span class="tech-badge">WebGL Accelerated</span>
-      <span class="tech-badge">Vanilla JS</span>
-    </div>
-  </section>
+  </div>
 
 </main>
 
-<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
 <footer class="footer">
-  <p data-i18n="footerText">Built with TensorFlow.js · Final Year Project · All processing happens in your browser.</p>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="brand-logo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="url(#lg2)"/><path d="M8 12l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="lg2" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs></svg>
+      </div>
+      <span class="footer-brand-name">Teachable Machine</span>
+    </div>
+    <p class="footer-text" data-i18n="footerText">Built with TensorFlow.js · Final Year Project · All processing happens in your browser.</p>
+    <div class="footer-links">
+      <span class="tech-badge">TensorFlow.js 4.x</span>
+      <span class="tech-badge">MobileNet V2</span>
+      <span class="tech-badge">Transfer Learning</span>
+      <span class="tech-badge">WebGL</span>
+    </div>
+  </div>
 </footer>
 
 <!-- ═══════════════════════════════ TOAST ═══════════════════════════════ -->
 <div id="toast" role="alert" aria-live="assertive"></div>
 
-<!-- ═══════════════════════════════ CLASS CARD TEMPLATE ═══════════════════════════════ -->
+<!-- ══════════════════════════ CLASS CARD TEMPLATE ══════════════════════════ -->
 <template id="class-card-tpl">
   <div class="class-card">
     <div class="class-card-header">
-      <div class="class-color-dot"></div>
+      <div class="color-dot"></div>
       <input type="text" class="class-name-input" placeholder="Class Name" aria-label="Class name"/>
-      <button class="class-remove-btn icon-btn" aria-label="Remove class" title="Remove class">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <button class="class-remove-btn btn btn-sm btn-ghost" aria-label="Remove class" title="Remove class" style="padding:4px 8px;color:var(--danger)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
-    <div class="class-upload-zone upload-zone">
-      <input type="file" class="class-file-input" accept="image/*" multiple aria-label="Upload images"/>
-      <div class="upload-zone-inner">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        <span class="upload-zone-text" data-i18n="uploadHint">Drop images or click</span>
-        <label class="btn btn-sm btn-outline upload-label">Browse</label>
+    <div class="class-card-body">
+      <div class="class-upload-zone upload-zone">
+        <input type="file" class="class-file-input" accept="image/*" multiple aria-label="Upload images" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
+        <div class="upload-icon">📁</div>
+        <div class="upload-title" data-i18n="uploadHint">Drop images or click</div>
+        <label class="btn btn-sm btn-outline upload-label" style="pointer-events:none;margin-top:4px">Browse</label>
       </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+        <span class="class-count-badge" style="font-size:0.75rem;color:var(--text-3);font-weight:500">0 images</span>
+        <button class="class-clear-btn btn btn-sm btn-ghost" data-i18n="clearImages">Clear</button>
+      </div>
+      <div class="class-thumbnails" style="margin-top:10px"></div>
     </div>
-    <div class="class-meta">
-      <span class="class-count-badge">0 images</span>
-      <button class="class-clear-btn btn btn-sm btn-ghost" data-i18n="clearImages">Clear</button>
-    </div>
-    <div class="class-thumbs"></div>
   </div>
 </template>
 

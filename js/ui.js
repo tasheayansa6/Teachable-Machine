@@ -7,7 +7,6 @@ const UI = (() => {
   const classesEmpty     = document.getElementById('classes-empty');
   const trainBtn         = document.getElementById('train-btn');
   const trainStatusBar   = document.getElementById('train-status-bar');
-  const trainStatusIcon  = document.getElementById('train-status-icon');
   const trainStatusText  = document.getElementById('train-status-text');
   const progressWrap     = document.getElementById('train-progress-wrap');
   const progressBar      = document.getElementById('train-progress-bar');
@@ -19,7 +18,6 @@ const UI = (() => {
   const predictSection   = document.getElementById('section-predict');
   const predictResults   = document.getElementById('predict-results-wrap');
   const predictPreview   = document.getElementById('predict-preview-img');
-  const topBadge         = document.getElementById('result-top-badge');
   const resultsContainer = document.getElementById('results-container');
   const template         = document.getElementById('class-card-tpl');
 
@@ -32,12 +30,12 @@ const UI = (() => {
     const card = frag.querySelector('.class-card');
     card.dataset.index = idx;
 
-    const dot       = card.querySelector('.class-color-dot');
+    const dot       = card.querySelector('.color-dot');
     const nameInput = card.querySelector('.class-name-input');
     const fileInput = card.querySelector('.class-file-input');
     const uploadZone= card.querySelector('.class-upload-zone');
     const countBadge= card.querySelector('.class-count-badge');
-    const thumbs    = card.querySelector('.class-thumbs');
+    const thumbs    = card.querySelector('.class-thumbnails');
     const removeBtn = card.querySelector('.class-remove-btn');
     const clearBtn  = card.querySelector('.class-clear-btn');
     const uploadLbl = card.querySelector('.upload-label');
@@ -49,7 +47,7 @@ const UI = (() => {
 
     // Accent colour
     dot.style.background = classColor(idx);
-    card.style.setProperty('--card-accent', classColor(idx));
+    card.style.setProperty('--class-accent', classColor(idx));
 
     // Pre-fill
     if (prefill.name) nameInput.value = prefill.name;
@@ -121,8 +119,7 @@ const UI = (() => {
   function setTrainEnabled(v) { trainBtn.disabled = !v; }
 
   function setStatus(type, icon, textKey, rawText) {
-    trainStatusBar.className = `status-bar status-${type}`;
-    trainStatusIcon.textContent = icon;
+    trainStatusBar.className = `train-status train-status-${type}`;
     trainStatusText.textContent = rawText || I18n.t(textKey);
   }
 
@@ -132,6 +129,8 @@ const UI = (() => {
     const pct = Math.round((epoch / total) * 100);
     progressBar.style.width = pct + '%';
     progressLabel.textContent = pct + '%';
+    const epochEl = document.getElementById('train-progress-epoch');
+    if (epochEl) epochEl.textContent = `Epoch ${epoch}/${total} — loss: ${loss.toFixed(3)}`;
     TrainingChart.push(loss, acc);
   }
 
@@ -158,10 +157,7 @@ const UI = (() => {
 
   function showPredictResults(imgSrc, predictions) {
     predictPreview.src = imgSrc;
-    predictResults.style.display = 'flex';
-
-    const top = predictions[0];
-    topBadge.textContent = top ? `${top.className} ${(top.probability*100).toFixed(1)}%` : '';
+    predictResults.style.display = 'grid';
 
     resultsContainer.innerHTML = '';
     predictions.forEach((p, i) => {
@@ -169,8 +165,12 @@ const UI = (() => {
       const div = document.createElement('div');
       div.className = 'result-bar-item';
       div.innerHTML = `
-        <div class="result-bar-label">
-          <span>${p.className}</span><span>${pct}%</span>
+        <div class="result-bar-header">
+          <div class="result-bar-label">
+            <span style="width:10px;height:10px;border-radius:50%;background:${classColor(i)};display:inline-block;flex-shrink:0"></span>
+            <span>${p.className}</span>
+          </div>
+          <span class="result-bar-pct">${pct}%</span>
         </div>
         <div class="result-bar-track">
           <div class="result-bar-fill ${i===0?'top':''}" style="width:0%"></div>
@@ -187,7 +187,7 @@ const UI = (() => {
     tests.forEach(({ name, emoji, img }) => {
       const btn = document.createElement('button');
       btn.className = 'demo-test-btn';
-      btn.textContent = `${emoji} Test ${name}`;
+      btn.innerHTML = `<span>${emoji}</span><span>Test ${name}</span>`;
       btn.addEventListener('click', () => onTest(img));
       wrap.appendChild(btn);
     });

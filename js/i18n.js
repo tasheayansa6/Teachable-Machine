@@ -5,6 +5,7 @@ const I18n = (() => {
   const translations = {
     en: {
       brand:         'Teachable Machine',
+      getStarted:    'Get Started',
       loadDemo:      '⚡ Load Demo',
       heroBadge:     '100% In-Browser · No Server · No Code',
       heroTitle:     'Train Your Own AI Model',
@@ -71,6 +72,7 @@ const I18n = (() => {
     },
     ml: {
       brand:         'ടീച്ചബിൾ മെഷീൻ',
+      getStarted:    'ആരംഭിക്കുക',
       loadDemo:      '⚡ ഡെമോ ലോഡ് ചെയ്യുക',
       heroBadge:     '100% ബ്രൗസറിൽ · സെർവർ ഇല്ല · കോഡ് ഇല്ല',
       heroTitle:     'നിങ്ങളുടെ സ്വന്തം AI മോഡൽ ട്രെയിൻ ചെയ്യുക',
