@@ -1,13 +1,13 @@
 /**
- * data.js — Image collection and feature extraction
+ * data.js — In-memory image store
  */
-
 const DataStore = (() => {
-  // classes: [{ name, images: [HTMLImageElement] }]
-  const classes = [];
+  let classes = [];   // [{ id, name, images[] }]
+  let nextId  = 0;
 
   function addClass(name = '') {
-    classes.push({ name, images: [] });
+    const id = nextId++;
+    classes.push({ id, name, images: [] });
     return classes.length - 1;
   }
 
@@ -19,31 +19,32 @@ const DataStore = (() => {
     if (classes[index]) classes[index].name = name;
   }
 
-  function addImages(classIndex, imageElements) {
-    if (classes[classIndex]) {
-      classes[classIndex].images.push(...imageElements);
-    }
+  function addImages(index, imgs) {
+    if (classes[index]) classes[index].images.push(...imgs);
   }
 
-  function getClasses() {
-    return classes;
+  function clearImages(index) {
+    if (classes[index]) classes[index].images = [];
   }
 
-  function getClass(index) {
-    return classes[index];
+  function getClasses()      { return classes; }
+  function getClass(i)       { return classes[i]; }
+  function getClassCount()   { return classes.length; }
+  function getTotalImages()  { return classes.reduce((s, c) => s + c.images.length, 0); }
+
+  function isReady(min = 1) {
+    return classes.length >= 2 && classes.every(c => c.images.length >= min);
   }
 
   function clear() {
-    classes.length = 0;
+    classes = [];
+    nextId  = 0;
   }
 
-  /**
-   * Returns true if every class has at least `minImages` images and
-   * there are at least 2 classes.
-   */
-  function isReady(minImages = 1) {
-    return classes.length >= 2 && classes.every(c => c.images.length >= minImages);
-  }
-
-  return { addClass, removeClass, setClassName, addImages, getClasses, getClass, clear, isReady };
+  return {
+    addClass, removeClass, setClassName,
+    addImages, clearImages,
+    getClasses, getClass, getClassCount, getTotalImages,
+    isReady, clear
+  };
 })();

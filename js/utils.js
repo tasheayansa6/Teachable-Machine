@@ -1,31 +1,20 @@
 /**
- * utils.js — Helper functions
+ * utils.js — Shared helpers
  */
 
-/**
- * Resize and crop an image element to a square canvas, returning a tensor.
- * @param {HTMLImageElement} imgEl
- * @param {number} size - target width/height in pixels
- * @returns {HTMLCanvasElement}
- */
+/** Center-crop + resize an image to a square canvas */
 function imageToCanvas(imgEl, size = 224) {
   const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
+  canvas.width = canvas.height = size;
   const ctx = canvas.getContext('2d');
-  // Center-crop
-  const min = Math.min(imgEl.naturalWidth, imgEl.naturalHeight);
-  const sx = (imgEl.naturalWidth  - min) / 2;
-  const sy = (imgEl.naturalHeight - min) / 2;
+  const min = Math.min(imgEl.naturalWidth || imgEl.width, imgEl.naturalHeight || imgEl.height);
+  const sx  = ((imgEl.naturalWidth  || imgEl.width)  - min) / 2;
+  const sy  = ((imgEl.naturalHeight || imgEl.height) - min) / 2;
   ctx.drawImage(imgEl, sx, sy, min, min, 0, 0, size, size);
   return canvas;
 }
 
-/**
- * Load a File object as an HTMLImageElement (resolves when loaded).
- * @param {File} file
- * @returns {Promise<HTMLImageElement>}
- */
+/** File → HTMLImageElement */
 function fileToImage(file) {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
@@ -36,27 +25,38 @@ function fileToImage(file) {
   });
 }
 
-/**
- * Show a temporary toast notification.
- * @param {string} message
- * @param {number} duration - ms
- */
-function showToast(message, duration = 3000) {
-  let toast = document.getElementById('toast');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.id = 'toast';
-    document.body.appendChild(toast);
-  }
-  toast.textContent = message;
-  toast.classList.add('show');
-  clearTimeout(toast._timer);
-  toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
+/** src string / data-url → HTMLImageElement */
+function srcToImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload  = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
 }
 
-/**
- * Clamp a number between min and max.
- */
-function clamp(val, min, max) {
-  return Math.max(min, Math.min(max, val));
+/** Toast notification */
+function showToast(message, type = 'default', duration = 3200) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = 'show';
+  if (type === 'success') toast.classList.add('toast-success');
+  if (type === 'error')   toast.classList.add('toast-error');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { toast.className = ''; }, duration);
 }
+
+/** Seeded pseudo-random (mulberry32) */
+function seededRng(seed) {
+  let s = (seed * 2654435761) >>> 0;
+  return () => {
+    s += 0x6D2B79F5;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** CLASS ACCENT COLOURS */
+const CLASS_COLORS = ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#84cc16'];
+function classColor(idx) { return CLASS_COLORS[idx % CLASS_COLORS.length]; }
