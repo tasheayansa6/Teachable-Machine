@@ -134,13 +134,15 @@
     let lastLoss = 0, lastAcc = 0;
 
     try {
-      await ModelManager.train(DataStore.getClasses(), (epoch, total, loss, acc) => {
-        UI.updateProgress(epoch, total, loss, acc);
-        lastLoss = loss; lastAcc = acc;
+      const result = await ModelManager.train(DataStore.getClasses(), (epoch, total, loss, acc, valAcc) => {
+        UI.updateProgress(epoch, total, loss, acc, valAcc);
+        lastLoss = loss; lastAcc = valAcc ?? acc;
       });
 
       UI.showProgress(false);
-      UI.setStatus('success', '✅', 'statusDone');
+      const stoppedEarly = result && result.stopped;
+      UI.setStatus('success', '✅', stoppedEarly ? null : 'statusDone',
+        stoppedEarly ? `✅ ${I18n.t('statusDone')} (early stop)` : null);
       UI.showStats(40, DataStore.getTotalImages(), lastAcc, lastLoss);
       UI.showModelActions(true);
       UI.showPredictSection();

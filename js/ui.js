@@ -125,13 +125,17 @@ const UI = (() => {
 
   function showProgress(v) { progressWrap.style.display = v ? 'flex' : 'none'; }
 
-  function updateProgress(epoch, total, loss, acc) {
+  function updateProgress(epoch, total, loss, acc, valAcc) {
     const pct = Math.round((epoch / total) * 100);
     progressBar.style.width = pct + '%';
     progressLabel.textContent = pct + '%';
     const epochEl = document.getElementById('train-progress-epoch');
-    if (epochEl) epochEl.textContent = `Epoch ${epoch}/${total} — loss: ${loss.toFixed(3)}`;
-    TrainingChart.push(loss, acc);
+    if (epochEl) {
+      const accStr    = acc    != null ? ` acc: ${(acc * 100).toFixed(1)}%`    : '';
+      const valAccStr = valAcc != null ? ` | val: ${(valAcc * 100).toFixed(1)}%` : '';
+      epochEl.textContent = `Epoch ${epoch}/${total} — loss: ${loss.toFixed(3)}${accStr}${valAccStr}`;
+    }
+    TrainingChart.push(loss, valAcc ?? acc);
   }
 
   function showChart(v) {

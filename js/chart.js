@@ -85,6 +85,12 @@ const TrainingChart = (() => {
     ctx.font = '10px Inter, sans-serif';
     ctx.fillText('1', pad.left, H - 6);
     ctx.fillText(String(n), pad.left + cW - 8, H - 6);
+
+    // Legend
+    ctx.fillStyle = '#ef4444';
+    ctx.fillText('loss', pad.left + 4, pad.top + 14);
+    ctx.fillStyle = '#10b981';
+    ctx.fillText('val acc', pad.left + 36, pad.top + 14);
   }
 
   function reset() {
